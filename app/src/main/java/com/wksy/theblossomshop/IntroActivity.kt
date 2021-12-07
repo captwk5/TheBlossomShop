@@ -2,18 +2,18 @@ package com.wksy.theblossomshop
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.wksy.theblossomshop.databinding.ActivityIntroBinding
 
 class IntroActivity : AppCompatActivity() {
+    private lateinit var viewBinding: ActivityIntroBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_intro)
+        viewBinding = ActivityIntroBinding.inflate(layoutInflater)
+        setContentView(viewBinding.root)
 
-        val enter = findViewById<TextView>(R.id.enter)
-
-        enter.setOnClickListener {
+        viewBinding.enter.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
