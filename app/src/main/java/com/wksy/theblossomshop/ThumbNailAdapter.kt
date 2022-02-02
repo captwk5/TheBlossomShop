@@ -10,7 +10,7 @@ import com.wksy.theblossomshop.databinding.ItemThumbnailBinding
 
 class ThumbNailAdapter(private val context: Context) : RecyclerView.Adapter<ThumbNailAdapter.ViewHolder>() {
     private lateinit var viewBinding: ItemThumbnailBinding
-    var datas = mutableListOf<ThumbNail>()
+    var datas = ArrayList<ThumbNail>()
 
     interface ThumbNailClickListener{
         fun onClick(view:View, item: ThumbNail, position: Int)

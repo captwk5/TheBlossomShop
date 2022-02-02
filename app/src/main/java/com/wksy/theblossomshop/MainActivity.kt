@@ -15,10 +15,7 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     private lateinit var viewBinding: ActivityMainBinding
-
     private lateinit var thumbNailAdapter: ThumbNailAdapter
-
-    var datas = mutableListOf<ThumbNail>()
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,21 +23,38 @@ class MainActivity : AppCompatActivity() {
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
+        initView()
+        bindingViewModel()
+        listener()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun initView(){
         thumbNailAdapter = ThumbNailAdapter(this)
         viewBinding.thumbnailList.adapter = thumbNailAdapter
+        thumbNailAdapter.notifyDataSetChanged()
+    }
 
-        datas.add(ThumbNail("test1"))
-        datas.add(ThumbNail("test2"))
-        datas.add(ThumbNail("test3"))
-        thumbNailAdapter.datas = datas
+    private fun bindingViewModel(){
+        viewModel.apply {
+            loadDatas()
+
+            dataLoader.observe(this@MainActivity){
+                thumbNailAdapter.datas = it
+            }
+        }
+    }
+
+    private fun listener(){
         thumbNailAdapter.setListener(object : ThumbNailAdapter.ThumbNailClickListener{
             override fun onClick(view: View, item: ThumbNail, position: Int) {
                 CoroutineScope(Dispatchers.Main).launch {
                     Toast.makeText(this@MainActivity, item.description + "-$position", Toast.LENGTH_SHORT).show()
+                    val fragmentTransaction = supportFragmentManager.beginTransaction()
+                    fragmentTransaction.add(viewBinding.fragmentContainer.id, BlossomFragment())
+                    fragmentTransaction.commit()
                 }
             }
         })
-
-        thumbNailAdapter.notifyDataSetChanged()
     }
 }
